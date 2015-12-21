@@ -1,0 +1,28 @@
+{
+   "name": "Time Tracker Tab",
+   "description": "Utility for tracking task times",
+   "version": "0.1",
+   "permissions": [
+      "tabs",
+      "identity",
+      "https://www.googleapis.com/*",
+      "https://striking-berm-752.appspot.com/_ah/api/*",
+      "https://accounts.google.com/o/oauth2/token"
+   ],"content_scripts": [
+  {
+    "matches": ["http://www.google.com/robots.txt*"],
+    "js": ["oauth2/oauth2_inject.js"],
+    "run_at": "document_start"
+  }
+],"web_accessible_resources" : [
+    "oauth2/oauth2.html"
+  ],
+   "background": {
+     
+     "scripts": ["/js/background.js"]
+   },
+    "browser_action": {
+      "default_title": "Open tracker"
+    },
+    "manifest_version": 2
+  }
