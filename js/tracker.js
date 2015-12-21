@@ -6,8 +6,8 @@ var POST_QUERYCONFERENCES_ENDPOINT = 'conference/v1/queryConferences';
 
 
 var googleAuth = new OAuth2('google', {
-  client_id: '419716539860-dfj8h05gackg138jnhls0u4q5l1u5e5q.apps.googleusercontent.com',
-  client_secret: 'rqra1MNGHREYt2zYBxRBfvGS',
+  client_id: '',
+  client_secret: '',
   api_scope: 'https://www.googleapis.com/auth/plus.profile.emails.read https://www.googleapis.com/auth/drive'
 });
 
