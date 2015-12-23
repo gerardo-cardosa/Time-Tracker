@@ -11,11 +11,12 @@ var googleAuth = new OAuth2('google', {
   api_scope: 'https://www.googleapis.com/auth/plus.profile.emails.read https://www.googleapis.com/auth/drive'
 });
 
-
+function clickAuthorize()
+{ 
 	googleAuth.authorize(function() {
 
 	});
-
+}
 
 $(document).ready(function(){
 	$('#first').fadeOut('slow');
