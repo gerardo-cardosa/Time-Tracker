@@ -4,7 +4,7 @@
 var created = true;
 var windowId =0;
 var MAIN_HTML = 'popup.html';
-var wind = chrome.windows.create({url:chrome.extension.getURL(MAIN_HTML), type: 'panel', width: 300, height:500}, windowCreated);
+var wind = chrome.windows.create({url:chrome.extension.getURL(MAIN_HTML), type: 'panel', width: 350, height:500}, windowCreated);
 
 chrome.browserAction.onClicked.addListener(function(tab) {
 

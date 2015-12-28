@@ -6,11 +6,12 @@
       "tabs",
       "identity",
       "https://www.googleapis.com/*",
+      "http://localhost/*",
       "https://striking-berm-752.appspot.com/_ah/api/*",
       "https://accounts.google.com/o/oauth2/token"
    ],"content_scripts": [
   {
-    "matches": ["http://www.google.com/robots.txt*"],
+    "matches": ["http://www.google.com/robots.txt*","http://localhost:8081/*"],
     "js": ["oauth2/oauth2_inject.js"],
     "run_at": "document_start"
   }
@@ -22,7 +23,8 @@
      "scripts": ["/js/background.js"]
    },
     "browser_action": {
-      "default_title": "Open tracker"
+      "default_title": "Open tracker",
+      "default_icon": { "38": "img/icon.png"}
     },
     "manifest_version": 2
   }

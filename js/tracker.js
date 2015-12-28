@@ -1,8 +1,11 @@
 /*Constants*/
-var APP_URL= 'https://striking-berm-752.appspot.com/_ah/api/';
+var APP_URL= 'localhost:8081/';
 /*Endpoints*/
-var GET_APIS_ENDPOINT= 'discovery/v1/apis';
-var POST_QUERYCONFERENCES_ENDPOINT = 'conference/v1/queryConferences';
+var GET_TASKS= 'tasks';
+var ADD_NEW_TASK = 'taskInsert';
+var STOP_TASK = 'stop';
+var START_TASK = 'start';
+
 
 
 var googleAuth = new OAuth2('google', {
@@ -12,14 +15,32 @@ var googleAuth = new OAuth2('google', {
 });
 
 
+function buttonAuthorize(){
 	googleAuth.authorize(function() {
-
+		showContent()
 	});
+}
 
 
 $(document).ready(function(){
-	$('#first').fadeOut('slow');
+	showContent();
+	$('#button_authorize').click(function(){
+		buttonAuthorize();
+	});
 });
+
+function showContent(){
+	if(googleAuth.hasAccessToken())
+	{
+		$('#holder').show();
+		$('#authorize_login').hide();
+	}
+	else
+	{
+		$('#authorize_login').show();
+		$('#holder').hide();
+	}
+}
 
 function driveAjax(){
 
@@ -36,23 +57,15 @@ function driveAjax(){
   }); 
 }
 
-/* Test of Jquery */
-$('#button').click(function(){
-	$('#content').fadeOut('slow');
-});
 
 function modifyContent(resp, xhr)
 {
-	var content = $('#content');
+	//var content = $('#content');
 	//var string = JSON.stringify(resp.items[0]);
-	content.html(resp);
+	//content.html(resp);
 }
 
 
-function getApis(){
-	var request = {
-		'method': 'GET',
-		'parameters': {'alt':'json'}
-	};
+function getTasks(){
 		
 }

@@ -31,7 +31,7 @@ var tasks = {
 	    	jsonObj = $.toJSON(task);
 	    	console.log(jsonObj);
 	    	
-	        $.post('http://localhost:8888/timetracker',{'json' : jsonObj},function(res) {
+	        $.post(APP_URL + ADD_NEW_TASK,{'json' : jsonObj},function(res) {
 	        	taskInterface.index();
 	        });
 	        
@@ -54,7 +54,7 @@ var taskInterface = {
 			
 			var task = someObj;
 			task.Task_ID = taskInterface.nextID();
-			var out;
+			var out = "";
 			out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
 			out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
 			out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" />';
@@ -87,7 +87,7 @@ var taskInterface = {
 		var out = "";
 		$.ajax({
 			type: "GET",
-			url : 'http://localhost:8888/timetrackerlist',
+			url : APP_URL + GET_TASKS,
 			data: {},
 			success : function(data) {
 				
@@ -141,9 +141,11 @@ var taskInterface = {
 	toggleTimer: function (id) {
 		
 		$.ajax({
-			type: "GET",
-			url : 'http://localhost:8888/timetracker',
-			data: {Task_ID : id},
+			type: "POST",
+			url : APP_URL + 'taskTime',
+			data: JSON.stringify({Task_ID : id}),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
 			success : function(data) {
 				if (data) {
 					$('#item' + id).toggleClass('running');
