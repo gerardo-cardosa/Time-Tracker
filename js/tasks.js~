@@ -75,7 +75,8 @@ var taskInterface = {
 			var formlist = $('#form-list');
 			formlist.prepend(out);
 			var child = $(formlist.children()[0]);
-			child.change('task-id'+task.Task_ID,function(e){		
+			child.change('task-id'+task.Task_ID,function(e){				
+				console.log("create new task############   " + e.data);
 				setID(e.data);		
 			});
 
@@ -201,6 +202,7 @@ var taskInterface = {
 		
 				
 		
+		console.log("toggle" + data.Task_ID);
 		$('#'+data.Task_ID).children('input').attr('disabled',true)
 		if (data) {
 					$('#' + id).toggleClass('running');

@@ -81,7 +81,7 @@ input[type=text]:focus {	border: solid 1px #fff286;	background-color: #fff;}
 ----------------------------------------------------------------------------- */
 
 .item {text-align: left;border-bottom: solid 1px #ccc; padding: 14px 12px!important; position: relative; background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#efefef)); display:block; overflow:auto;}
-.item a.power {background: url(../img/play.png) 0 0 no-repeat; 	display: block; position: absolute;	right: 3px; width: 100px;height: 32px; bottom: 23px;right: 10px;}
+.item a.power {background: url(../img/play.png) 0 0 no-repeat; 	display: none; position: absolute;	right: 3px; width: 100px;height: 32px; bottom: 23px;right: 10px;}
 .item a.running {background: url(../img/pause.png) 0 0 no-repeat;}
 .item span.timer{	position: absolute;	right: 120px;	top: 23px; font-size: 17px;}
 p.running {background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(100%,#e9e9ce));}
