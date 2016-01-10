@@ -2,45 +2,45 @@
  * TODO.
  */
 var someObj = {
-				Task_ID : "",
-				Date_Submitted : null,
-				Start_Time : new Date(),
-				End_Time : null,
-				running : false,
-				Total_Effort : 0
-			};
+    Task_ID: "",
+    Date_Submitted: null,
+    Start_Time: '00:00:00',
+    End_Time: null,
+    running: false,
+    Total_Effort: 0
+};
 
 ///////////{}////////////////////////////////////This variable is for testing and should be removed for the final implementation
 var info = new Array();
-			
+
 /**
  * Exception hook
  */
 function onError(tx, error) {
-	alert(error.message);
+    alert(error.message);
 }
 
 
 var tasks = {
 
-	insert: function (task, start_time,end_time, total_effort) {
-	
-			
-			//task.Task_ID = task.Task_d;
-			task.Start_Time = start_time;
-			task.End_Time = end_time;
-			task.Total_Effort = total_effort;
+    insert: function(task, start_time, end_time, total_effort) {
 
-			
-	    	jsonObj = $.toJSON(task);
-	    	console.log('insert ' + jsonObj);
-	    	
-	      //  $.post(APP_URL + ADD_NEW_TASK,{'json' : jsonObj},function(res) {
-	        	taskInterface.index();
-	      //  });
-	        
-	        return task;
-	}
+
+        //task.Task_ID = task.Task_d;
+        task.Start_Time = start_time;
+        task.End_Time = end_time;
+        task.Total_Effort = total_effort;
+
+
+        jsonObj = $.toJSON(task);
+        console.log('insert ' + jsonObj);
+
+        //  $.post(APP_URL + ADD_NEW_TASK,{'json' : jsonObj},function(res) {
+        taskInterface.index();
+        //  });
+
+        return task;
+    }
 }
 
 
@@ -49,189 +49,188 @@ var tasks = {
  */
 var taskInterface = {
 
-	intervals: new Array,
+    intervals: new Array,
 
-	bind: function () {
-		// create new task
-		$(".create").live("click", function (e) {
-			e.preventDefault();
-			
-			var task = someObj;
-			task.Task_ID = taskInterface.nextID();
-			var out = "";
-			out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
-			out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
-			out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" />';
+    bind: function() {
+        // create new task
+        $(".create").live("click", function(e) {
+            e.preventDefault();
 
-			var start = new Date(task.Start_Time);
-			var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
-			out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
-			out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
+            var task = someObj;
+            task.Task_ID = taskInterface.nextID();
+            var out = "";
+            out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
+            out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
+            out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" />';
 
-			out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"  ></a>';
-			out += '</p>';
-					
-			
-			var formlist = $('#form-list');
-			formlist.prepend(out);
-			var child = $(formlist.children()[0]);
-			child.change('task-id'+task.Task_ID,function(e){		
-				setID(e.data);		
-			});
+            //var start = new Date(task.Start_Time);
+           // var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
+            //out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
+            out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
 
-			
+            out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"  ></a>';
+            out += '</p>';
 
 
-			console.log("create new task############" + $.toJSON(task));			
-		});
+            var formlist = $('#form-list');
+            formlist.prepend(out);
+            var child = $(formlist.children()[0]);
+            child.change('task-id' + task.Task_ID, function(e) {
+                setID(e.data);
+            });
 
 
-		
-
-	},
-
-	index: function () {
-		
-		
-		var out = "";
-	/*	$.ajax({
-			type: "GET",
-			url : APP_URL + GET_TASKS,
-			data: {},
-			success : function(data) {
-				
-				console.log("show task list############" + data);
-				
-				var len = data.length, i;
-				
-				if (len > 0) {
-					for (i = 0; i < len; i++) {
-						var task = data[i];
-				
-						out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
-						out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
-						out += '<input type="text" value="' + task.Task_ID + '" id="task-id'  + task.Task_ID +  '" class="text" />';
-				
-						if (task.running == true) {
-							var start = new Date(task.Start_Time);
-							var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
-							out += '<span class="timer">' + taskInterface.hms(dif) + '</span>';
-						} else {
-							out += '<span class="timer">' + taskInterface.hms(task.Total_Effort) + '</span>';
-						}
-
-						out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"></a>';
-						out += '</p>';
-
-						if (task.running == true) {
-							taskInterface.startTask(task); // start task
-						}
-					}
-				} else {
-					out = "<p class=\"notask\"><label>No tasks</label></p>"
-				}
-				
-				$("#form-list").empty().append(out).show();
-			},
-		    error: function (xhr, ajaxOptions, thrownError) {
-		        alert(xhr.status);
-		        alert(thrownError);
-		    }
-		});*/
-	},
-
-	init: function () {
-		this.bind();
-		this.index();
-		this.toggleRunText();
-	},
 
 
-	toggleTimer: function (id) {
-		/*
-		$.ajax({
-			type: "POST",
-			url : APP_URL + 'taskTime',
-			data: JSON.stringify({Task_ID : id}),
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success : function(data) {
-				if (data) {
-					$('#item' + id).toggleClass('running');
-					$('#item' + id + ' .power').toggleClass('running');
+            console.log("create new task############" + $.toJSON(task));
+        });
 
-					if (data.running) {
-						taskInterface.stopTask(data);
-					} else {
-						taskInterface.startTask(data);
-						taskInterface.toggleRunText();
-					}
 
-				} else {					
-					var task = tasks.insert(id,new Date(),null,0);					
-				}
-				
-				
-			},
-		    error: function (xhr, ajaxOptions, thrownError) {
-		        alert(xhr.status);
-		        alert(thrownError);
-		    }
-		});*/
 
-		// Success code to make the app work without call to the API
-		var data;
-		console.log('toggle id: ' + id);
-		data = getItem(id)
-		
-		if(data == undefined)
-		{
-			datas = {};
-			datas.Task_ID = id;
-			datas.Date_Submitted = null;
-			datas.Start_Time = new Date();
-			datas.End_Time = null;
-			datas.running = false;
-			datas.Total_Effort = 0;
-			
-			info.push(datas);
-			data =  info[info.length-1];
-		}
-		//console.log('info ' + $.toJSON(info[id]))
-		
-				
-		
-		$('#'+data.Task_ID).children('input').attr('disabled',true)
-		if (data) {
-					$('#' + id).toggleClass('running');
-					$('#' + id + ' .power').toggleClass('running');
 
-					if (data.running) {
-						taskInterface.stopTask(data);
-						data.running = false;
-					} else {
-						taskInterface.startTask(data);
-						taskInterface.toggleRunText();
-						data.running = true;
-					}
+    },
 
-				} else {					
-					var task = tasks.insert(id,new Date(),null,0);					
-				}
-		
-	},
+    index: function() {
 
-	//////////////////////////////////////////////////////////////////////////////
-	// start task
-	//////////////////////////////////////////////////////////////////////////////
 
-	startTask: function (task) {
-		window.clearInterval(taskInterface.intervals[task.Task_ID]); // remove timer
+        var out = "";
+        /*	$.ajax({
+        		type: "GET",
+        		url : APP_URL + GET_TASKS,
+        		data: {},
+        		success : function(data) {
+        			
+        			console.log("show task list############" + data);
+        			
+        			var len = data.length, i;
+        			
+        			if (len > 0) {
+        				for (i = 0; i < len; i++) {
+        					var task = data[i];
+        			
+        					out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
+        					out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
+        					out += '<input type="text" value="' + task.Task_ID + '" id="task-id'  + task.Task_ID +  '" class="text" />';
+        			
+        					if (task.running == true) {
+        						var start = new Date(task.Start_Time);
+        						var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
+        						out += '<span class="timer">' + taskInterface.hms(dif) + '</span>';
+        					} else {
+        						out += '<span class="timer">' + taskInterface.hms(task.Total_Effort) + '</span>';
+        					}
 
-		
-		task.Start_Time = new Date();
+        					out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"></a>';
+        					out += '</p>';
 
-	/*	var start = new Date(); // set start to NOW
+        					if (task.running == true) {
+        						taskInterface.startTask(task); // start task
+        					}
+        				}
+        			} else {
+        				out = "<p class=\"notask\"><label>No tasks</label></p>"
+        			}
+        			
+        			$("#form-list").empty().append(out).show();
+        		},
+        	    error: function (xhr, ajaxOptions, thrownError) {
+        	        alert(xhr.status);
+        	        alert(thrownError);
+        	    }
+        	});*/
+    },
+
+    init: function() {
+        this.bind();
+        this.index();
+        this.toggleRunText();
+    },
+
+
+    toggleTimer: function(id) {
+
+        // Success code to make the app work without call to the API
+        var data;
+        console.log('toggle id: ' + id);
+        data = getItem(id)
+
+        if (data == undefined) {
+            datas = {};
+            datas.Task_ID = id;
+            datas.Date_Submitted = dateToDDMMYYYY();
+            datas.Start_Time = $('#' +id + ' .timer').text();
+            datas.End_Time = null;
+            datas.running = false;
+            datas.Total_Effort = 0;
+
+            info.push(datas);
+            data = info[info.length - 1];
+        }
+
+        $('#' + data.Task_ID).children('input').attr('disabled', true);
+        if (data) {
+            
+            if (data.running) {
+                taskInterface.stopTask(data);
+                data.running = false;
+                $.ajax({
+                    type: "POST",
+                    url: APP_URL + STOP_WATCH,
+                    data: JSON.stringify({
+                        "endTime": $('#' +data.Task_ID + ' .timer').text(),
+                        "startTime": data.Start_Time,
+                        "ldap": LDAP,
+                        "submitted": data.Date_Submitted,
+                        "taskID": data.Task_ID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+
+                        console.log("success!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ----- " + response.task_ID);
+                        var data_response = getItem(response.task_ID);
+                        $('#' + data_response.Task_ID).toggleClass('running');
+                        $('#' + data_response.Task_ID + ' .power').toggleClass('running');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                        taskInterface.startTask(data);
+                        taskInterface.toggleRunText();
+                        data.running = true;
+                    }
+                });
+                
+            } else {
+                data.Start_Time = $('#' +id + ' .timer').text();
+                $('#' + data.Task_ID).toggleClass('running');
+                $('#' + data.Task_ID + ' .power').toggleClass('running');
+                taskInterface.startTask(data);
+                taskInterface.toggleRunText();
+                data.running = true;
+
+
+            }
+
+        } else {
+            var task = tasks.insert(id, '00:00:00', null, 0);
+        }
+
+
+
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // start task
+    //////////////////////////////////////////////////////////////////////////////
+
+    startTask: function(task) {
+        window.clearInterval(taskInterface.intervals[task.Task_ID]); // remove timer
+
+
+       // task.Start_Time = new Date();
+
+        /*	var start = new Date(); // set start to NOW
 		if (task.running == true) {
 			//start = new Date(task.Start_Time);
 		} else {
@@ -239,80 +238,88 @@ var taskInterface = {
 	//		var task = tasks.insert(task.Task_ID,new Date(task.Start_Time),new Date(), new Date().getTime() - new Date(task.Start_Time).getTime());	
 		}
 */
-		// setup interval for counter
-		taskInterface.intervals[task.Task_ID] = window.setInterval(function () {
-			var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - task.Start_Time.getTime()) / 1000)
-			$('#' + task.Task_ID + ' .timer').text(taskInterface.hms(dif));
-		}, 500);
+        // setup interval for counter
+        taskInterface.intervals[task.Task_ID] = window.setInterval(function() {
+           // var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - task.Start_Time.getTime()) / 1000)
+            var text = $('#' + task.Task_ID + ' .timer').text();
+            var val =  taskInterface.sec(text)+1;
 
-		
-	},
+            $('#' + task.Task_ID + ' .timer').text(taskInterface.hms(val));
 
-	//////////////////////////////////////////////////////////////////////////////
-	// stop task
-	//////////////////////////////////////////////////////////////////////////////
-
-	stopTask: function (task) {
-		window.clearInterval(taskInterface.intervals[task.Task_ID]); // remove timer
-		var start, stop, dif = 0;
-		var task = tasks.insert(task,new Date(task.Start_Time),new Date(), task.Total_Effort +  Math.floor((new Date().getTime()- task.Start_Time.getTime())/1000));
-		var item = getItem(task.Task_IF);
-		if(item != undefined){  item = task;}
-				
-	},
+        }, 1000);
 
 
-	//////////////////////////////////////////////////////////////////////////////
-	// toggle RUN text on icon
-	//////////////////////////////////////////////////////////////////////////////
+    },
 
-	toggleRunText: function () {
-//				if (true) {
-//					chrome.browserAction.setBadgeText({
-//						text: 'RUN'
-//					});
-//				} else {
-//					chrome.browserAction.setBadgeText({
-//						text: ''
-//					});
-//				}
-	},
+    //////////////////////////////////////////////////////////////////////////////
+    // stop task
+    //////////////////////////////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////////////////////////////
-	// convert sec to hms
-	//////////////////////////////////////////////////////////////////////////////
+    stopTask: function(task) {
+        window.clearInterval(taskInterface.intervals[task.Task_ID]); // remove timer
+        var start, stop, dif = 0;
+        var end = $('#' + task.Task_ID + ' .timer').text();
+        var task = tasks.insert(task, task.Start_Time, end, end);// task.Total_Effort + Math.floor((new Date().getTime() - task.Start_Time.getTime()) / 1000));
+        var item = getItem(task.Task_ID);
+        if (item != undefined) {
+            item = task;
+        }
 
-	hms: function (secs) {
-		//secs = secs % 86400; // fix 24:00:00 overlay
-		var time = [0, 0, secs], i;
-		for (i = 2; i > 0; i--) {
-			time[i - 1] = Math.floor(time[i] / 60);
-			time[i] = time[i] % 60;
-			if (time[i] < 10) {
-				time[i] = '0' + time[i];
-			}
-		}
-		return time.join(':');
-	},
+    },
 
-	//////////////////////////////////////////////////////////////////////////////
-	// convert h:m:s to sec
-	//////////////////////////////////////////////////////////////////////////////
 
-	sec: function (hms) {
-		var t = String(hms).split(":");
-		return Number(parseFloat(t[0] * 3600) + parseFloat(t[1]) * 60 + parseFloat(t[2]));
-	},
+    //////////////////////////////////////////////////////////////////////////////
+    // toggle RUN text on icon
+    //////////////////////////////////////////////////////////////////////////////
 
-	nextID: function () {
-		var id = localStorage['lastid']; // get last id from local storage
-		if (id == undefined) {
-			id = 1; // generate first ID
-		} else {
-			id++; // generate next ID
-		}
-		localStorage['lastid'] = id; // save to localStorage
-		return id;
-	}
+    toggleRunText: function() {
+        //				if (true) {
+        //					chrome.browserAction.setBadgeText({
+        //						text: 'RUN'
+        //					});
+        //				} else {
+        //					chrome.browserAction.setBadgeText({
+        //						text: ''
+        //					});
+        //				}
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // convert sec to hms
+    //////////////////////////////////////////////////////////////////////////////
+
+    hms: function(secs) {
+        //secs = secs % 86400; // fix 24:00:00 overlay
+        var time = [0, 0, secs],
+            i;
+        for (i = 2; i > 0; i--) {
+            time[i - 1] = Math.floor(time[i] / 60);
+            time[i] = time[i] % 60;
+            if (time[i] < 10) {
+                time[i] = '0' + time[i];
+            }
+        }
+        return time.join(':');
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // convert h:m:s to sec
+    //////////////////////////////////////////////////////////////////////////////
+
+    sec: function(hms) {
+        var t = String(hms).split(":");
+        return Number(parseFloat(t[0] * 3600) + parseFloat(t[1]) * 60 + parseFloat(t[2]));
+    },
+
+    nextID: function() {
+        var id = localStorage['lastid']; // get last id from local storage
+        if (id == undefined) {
+            id = 1; // generate first ID
+        } else {
+            id++; // generate next ID
+        }
+        localStorage['lastid'] = id; // save to localStorage
+        return id;
+    }
 
 };

@@ -185,7 +185,7 @@ OAuth2.prototype.refreshAccessToken = function(refreshToken, callback) {
   formData.append('client_secret', data.clientSecret);
   formData.append('refresh_token', refreshToken);
   formData.append('grant_type', 'refresh_token');
-  xhr.open('POST', this.adapter.accessTokenURL(), true);
+  xhr.open('POST', 'https://www.googleapis.com/oauth2/v4/token', true);
   xhr.send(formData);
 };
 

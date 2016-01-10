@@ -1,10 +1,13 @@
 /*Constants*/
-var APP_URL= 'localhost:8081/';
+var APP_URL= 'https://traking-1183.appspot.com/_ah/api/timetracker/v1/';
 /*Endpoints*/
 var GET_TASKS= 'tasks';
 var ADD_NEW_TASK = 'taskInsert';
-var STOP_TASK = 'stop';
+var STOP_WATCH = 'stopWatch';
 var START_TASK = 'start';
+var SUBMIT = 'submit';
+
+var LDAP;
 
 
 
@@ -17,8 +20,8 @@ var googleAuth = new OAuth2('google', {
 
 
 function buttonAuthorize(){
-	googleAuth.authorize(function() {
-		showContent()
+	googleAuth.authorize(function() {		
+		showContent();
 	});
 }
 
@@ -28,24 +31,123 @@ $(document).ready(function(){
 	$('#button_authorize').click(function(){
 		buttonAuthorize();
 	});
+
+	$('#button-submit').click(function(){
+		buttonSubmit();
+	});
 });
 
 $(window).unload(function(){
 	$('.titlename_dps').text('closeeeeeeeeeeeeeeeeeeeeeeeeee');
 });
 
+function buttonSubmit()
+{
+	if(tasksRunning())
+	{
+		showDialog()
+		return;
+	}
+
+	if(info.length > 0)
+	{
+		callSubmitEndpoint();
+	}
+}
+
+function callSubmitEndpoint()
+{
+	var logs = new Array();//JSON.stringify(info);
+
+	for(var i = 0; i < info.length; i++)
+	{
+		var data = info[i];
+		logs.push({
+                        "endTime": data.End_Time,
+                        "startTime": data.Start_Time,
+                        "ldap": LDAP,
+                        "submitted": data.Date_Submitted,
+                        "taskID": data.Task_ID
+                    });
+	}
+
+	var body = { 'logs':logs};
+	$.ajax({
+                    type: "POST",
+                    url: APP_URL + SUBMIT,
+                    data: $.toJSON(body),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                    	console.log("submit success!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ----- " + response.message);
+                    	if(response.code == 200)
+                    		{
+                    			clearTasks();
+                    		}
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                        taskInterface.startTask(data);
+                        taskInterface.toggleRunText();
+                        data.running = true;
+                    }
+                });
+}
+
+function clearTasks(){
+	console.log('Clearing tasks!!!!!');
+	for(var i = info.length-1 ; i >= 0 ; i--)
+	{
+		var task = info[i];
+		$('#'+ task.Task_ID).remove();
+		info.pop();
+	}
+}
+
+function showDialog()
+{
+	console.log('Show dialog!!!!!');
+	$(function() {
+    $( "#dialog-message" ).dialog({
+      modal: true,
+      buttons: {
+        Ok: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+  });
+
+}
+
+function tasksRunning()
+{
+
+	for(var i = 0; i < info.length ; i++)
+	{
+		if(info[i].running)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 function showContent(){
-	if(googleAuth.hasAccessToken())
+	if(googleAuth.hasAccessToken() )
 	{
 		$('#holder').show();
 		$('#authorize_login').hide();
+		setLdap();
 	}
 	else
 	{
 		$('#authorize_login').show();
 		$('#holder').hide();
 	}
+
 }
 
 function driveAjax(){
@@ -61,6 +163,50 @@ function driveAjax(){
   		//modifyContent(error)
   	}
   }); 
+}
+
+function dateToDDMMYYYY()
+{
+	var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+    var today = mm+'.'+dd+'.'+yyyy;
+    return today;
+}
+
+function setLdap()
+{
+
+	var storedLDAP = localStorage['LDAP'];
+
+	if(storedLDAP == undefined)
+	{
+	$.ajax({
+  	url: 'https://www.googleapis.com/plus/v1/people/me?fields=emails%2Fvalue',
+  	type:'GET',
+  	 beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer '+ googleAuth.getAccessToken());},
+  	success: function(result){
+  		//modifyContent(JSON.stringify(result))
+  		LDAP = result.emails[0].value;
+  		localStorage['LDAP'] = LDAP;
+  	},
+  	error: function(xhr,status,error){
+  		
+  	}
+  }); 
+	}
+
+	else{
+		LDAP =  storedLDAP;
+	}
 }
 
 
@@ -103,6 +249,11 @@ function setID(item)
 {
 	console.log("setId function " + item);
 	var item = $('#'+item);
+	var item_val =  item.val().trim();
+	var space = ' ';
+	var rep = new RegExp(space, 'g');
+	item_val = item_val.replace(rep,'_')
+	item.val(item_val);
 	var sibling = item.siblings('a');
 	if(item.val()!='' && getItem(item.val()) == undefined && !isRepeated(item))
 	{	
