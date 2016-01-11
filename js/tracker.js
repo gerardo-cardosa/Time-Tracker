@@ -27,6 +27,18 @@ function buttonAuthorize(){
 
 
 $(document).ready(function(){
+     console.log('document ready ----------- ');
+	if(localStorage.isSubmitted == undefined)
+	{
+		localStorage['isSubmitted'] = true;	
+	}
+	else
+	{
+		if(localStorage.isSubmitted == 'false')
+		{
+			retrieveStored();
+		}
+	}
 	showContent();
 	$('#button_authorize').click(function(){
 		buttonAuthorize();
@@ -40,6 +52,13 @@ $(document).ready(function(){
 $(window).unload(function(){
 	$('.titlename_dps').text('closeeeeeeeeeeeeeeeeeeeeeeeeee');
 });
+
+function retrieveStored()
+{
+	console.log('retrieveStoed------------')
+	info = JSON.parse(localStorage.info);
+	taskInterface.index();
+}
 
 function buttonSubmit()
 {
@@ -66,7 +85,7 @@ function callSubmitEndpoint()
                         "endTime": data.End_Time,
                         "startTime": data.Start_Time,
                         "ldap": LDAP,
-                        "submitted": data.Date_Submitted,
+                        "submitted": dateToDDMMYYYY(data.Date_Submitted),
                         "taskID": data.Task_ID
                     });
 	}
@@ -83,6 +102,8 @@ function callSubmitEndpoint()
                     	if(response.code == 200)
                     		{
                     			clearTasks();
+                    			localStorage.info = '';
+                    			localStorage.isSubmitted = true;
                     		}
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -165,9 +186,9 @@ function driveAjax(){
   }); 
 }
 
-function dateToDDMMYYYY()
+function dateToDDMMYYYY(date)
 {
-	var today = new Date();
+	var today = new Date(date);
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
 
@@ -245,7 +266,7 @@ function isRepeated(item)
 	return value;
 }
 
-function setID(item)
+function setID(item, isIndex)
 {
 	console.log("setId function " + item);
 	var item = $('#'+item);
@@ -255,7 +276,7 @@ function setID(item)
 	item_val = item_val.replace(rep,'_')
 	item.val(item_val);
 	var sibling = item.siblings('a');
-	if(item.val()!='' && getItem(item.val()) == undefined && !isRepeated(item))
+	if(item.val()!='' && (isIndex || getItem(item.val()) == undefined) && !isRepeated(item))
 	{	
 		var parent = item.closest('p');
 		parent.attr('id', item.val());		
