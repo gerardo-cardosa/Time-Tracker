@@ -12,8 +12,8 @@ a {text-decoration: none;color:#555;}
 
 .titlename_dps {
      padding-top: 3px;
-     padding-left: 101px;
-     font-size: large;
+     float:left;
+     font-size: initial;
      font-family: Arial, Tahoma, sans-serif;
 }
 /* Initial content
@@ -63,7 +63,7 @@ p.buttons {padding: 1em 2em!important; overflow:hidden;}
 /* forms and inputs
 ----------------------------------------------------------------------------- */
 
-input[type=text] {	border: solid 1px #D6D6BE;	background-color: #fcfff4;	padding:3px 5px; width: 30%; font-size: 16px; -webkit-border-radius:2px; margin: 0 left; display:block;}
+input[type=text] {	border: solid 1px #D6D6BE;	background-color: #fcfff4;	padding:3px 5px; width: 30%; font-size: 16px; -webkit-border-radius:2px; margin: 0 left; display:block; float:left}
 input[type=text]:focus {	border: solid 1px #fff286;	background-color: #fff;}
 
 .form {overflow-y: auto;}
@@ -80,11 +80,12 @@ input[type=text]:focus {	border: solid 1px #fff286;	background-color: #fff;}
 /* item
 ----------------------------------------------------------------------------- */
 
-.item {text-align: left;border-bottom: solid 1px #ccc; padding: 14px 12px!important; position: relative; background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#efefef)); display:block; overflow:auto;}
-.item a.power {background: url(../img/play.png) 0 0 no-repeat; 	display: none; position: absolute;	right: 3px; width: 100px;height: 32px; bottom: 23px;right: 10px;}
+.item {text-align: left;border-bottom: solid 1px #ccc; padding: 5px 6px!important; position: relative; background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#efefef)); display:block; overflow:auto;}
+.item a.power {background: url(../img/play.png) 50% 0 no-repeat; 	display: none; float:right;	 width: 76px;height: 32px; bottom: 23px;right: 10px;}
 .item a.running {background: url(../img/pause.png) 0 0 no-repeat;}
-.item span.timer{	position: absolute;	right: 120px;	top: 23px; font-size: 17px;}
-p.running {background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(100%,#e9e9ce));}
+.item span.timer{right: 120px;	top: 23px; font-size: 17px; padding-left: 10px; font-size: x-large;}
+p.running {background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(100%,rgb(145, 255, 149))); }
+
 
 /* other elements
 ----------------------------------------------------------------------------- */

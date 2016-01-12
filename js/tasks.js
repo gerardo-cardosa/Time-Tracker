@@ -60,8 +60,8 @@ var taskInterface = {
             task.Task_ID = taskInterface.nextID();
             var out = "";
             out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
-            out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
-            out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" />';
+            //out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
+            out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" placeholder="Task Id..." />';
 
             //var start = new Date(task.Start_Time);
            // var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
@@ -106,7 +106,7 @@ var taskInterface = {
         					var task = data[i];
         			
         					out += '<p class="item' + (task.running == true ? ' running' : '') + '" id="' + task.Task_ID + '" rel="' + task.Task_ID + '">';
-        					out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
+        					//out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
         					out += '<input type="text" value="' + task.Task_ID + '" id="task-id'  + task.Task_ID +  '" class="text" disabled="true"/>';
         			
         					if (task.running == true) {
@@ -115,7 +115,7 @@ var taskInterface = {
                                 console.log('index................................' + dif)
         						out += '<span class="timer">' + taskInterface.hms(dif) + '</span>';
         					} else {
-        						out += '<span class="timer">' + task.Start_Time + '</span>';
+        						out += '<span class="timer">' + task.End_Time + '</span>';
         					}
 
         					out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"></a>';
