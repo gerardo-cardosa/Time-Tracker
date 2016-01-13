@@ -253,7 +253,7 @@ var taskInterface = {
             $('#' + task.Task_ID + ' .timer').text(taskInterface.hms(val));
 
         }, 1000);
-
+	localStorage.isSubmitted = false;
 
     },
 

@@ -115,7 +115,7 @@ var taskInterface = {
                                 console.log('index................................' + dif)
         						out += '<span class="timer">' + taskInterface.hms(dif) + '</span>';
         					} else {
-        						out += '<span class="timer">' + task.Start_Time + '</span>';
+        						out += '<span class="timer">' + task.End_Time + '</span>';
         					}
 
         					out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"></a>';
