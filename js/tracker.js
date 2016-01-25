@@ -86,7 +86,8 @@ function callSubmitEndpoint()
                         "startTime": data.Start_Time,
                         "ldap": LDAP,
                         "submitted": dateToDDMMYYYY(data.Date_Submitted),
-                        "taskID": data.Task_ID
+                        "taskID": data.Task_ID,
+                        "taskType":data.Task_Type
                     });
 	}
 
@@ -278,6 +279,7 @@ function setID(item, isIndex)
 	var sibling = item.siblings('a');
 	if(item.val()!='' && (isIndex || getItem(item.val()) == undefined) && !isRepeated(item))
 	{	
+		var tasktype = item.data('tasktype');
 		var parent = item.closest('p');
 		parent.attr('id', item.val());		
 		sibling.css('display','block');	
@@ -287,13 +289,55 @@ function setID(item, isIndex)
 			console.log("e.data " + e.data);	
 			taskInterface.toggleTimer(e.data);
 		});
+		var button = parent.children('button');
+		button.attr('disabled',false);
+		button.click(function(){
+			saveItem(parent.attr('id'));
+		});
+	
 
 	}
 	else
 	{
 		sibling.css('display','none');
+		//item.siblings('button').attr('disabled',true);
 	}
 	
+}
+
+function saveItem(id)
+{
+	var data;
+	data = getItem(id);
+
+	if (data == undefined) {
+            data = setItem(id);            
+        }
+
+    var item = $('#'+id);
+    item.children('input').attr('disabled',true);
+    var time = item.children('select').val();
+
+        data.Start_Time = taskInterface.hms(0);
+        data.End_Time = taskInterface.hms(time * 3600);
+        data.Total_Effort = data.End_Time;
+    localStorage.isSubmitted = false;
+    localStorage.info = JSON.stringify(info);
+}
+
+function setItem(id)
+{
+	datas = {};
+            datas.Task_ID = id;
+            datas.Date_Submitted = new Date();
+            datas.Start_Time = $('#' +id + ' .timer').text();
+            datas.End_Time = null;
+            datas.running = false;
+            datas.Total_Effort = 0;
+            datas.Task_Type = $('#'+id).data('tasktype');
+
+            info.push(datas);
+    return info[info.length - 1];
 }
 
 

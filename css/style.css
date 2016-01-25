@@ -63,7 +63,7 @@ p.buttons {padding: 1em 2em!important; overflow:hidden;}
 /* forms and inputs
 ----------------------------------------------------------------------------- */
 
-input[type=text] {	border: solid 1px #D6D6BE;	background-color: #fcfff4;	padding:3px 5px; width: 30%; font-size: 16px; -webkit-border-radius:2px; margin: 0 left; display:block; float:left}
+input[type=text] {	border: solid 1px #D6D6BE;	background-color: #fcfff4;	padding:3px 5px; width: 43%; font-size: 16px; -webkit-border-radius:2px; margin: 0 left; display:block; float:left}
 input[type=text]:focus {	border: solid 1px #fff286;	background-color: #fff;}
 
 .form {overflow-y: auto;}
@@ -98,6 +98,25 @@ p.remove-confirm {color:#a90329; font-weight: bold;line-height: 1.2em;margin: 0;
 p.remove-confirm strong {color:#333;}
 
 #form-create {margin: 0 5px;}
+
+.task_type{
+     float: left;
+     margin-right: 8%;
+     padding-top: 6px;
+    padding-bottom: 5px;
+}
+.time_dropdown{
+     padding-left: 20px;
+     margin-left: 10px;
+     padding-top: 3px;
+     padding-bottom: 2px;
+}
+
+.save_task{
+     padding-left: 21px;
+     padding-right: 21px;
+     margin-left: 19px;
+}
 
 /* footer
 ----------------------------------------------------------------------------- */
