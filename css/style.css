@@ -107,9 +107,11 @@ p.remove-confirm strong {color:#333;}
 }
 .time_dropdown{
      padding-left: 20px;
-     margin-left: 10px;
+     /* margin-left: 32%; */
      padding-top: 3px;
      padding-bottom: 2px;
+     float: right;
+     margin-right: 5px;
 }
 
 .save_task{

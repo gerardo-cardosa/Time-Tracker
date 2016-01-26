@@ -81,12 +81,13 @@ function callSubmitEndpoint()
 	for(var i = 0; i < info.length; i++)
 	{
 		var data = info[i];
+		var tID = (data.Task_Type == 'GCases' || data.Task_Type == 'Stack Overflow')? data.Task_ID : data.Task_Type;
 		logs.push({
                         "endTime": data.End_Time,
                         "startTime": data.Start_Time,
                         "ldap": LDAP,
                         "submitted": dateToDDMMYYYY(data.Date_Submitted),
-                        "taskID": data.Task_ID,
+                        "taskID": tID,
                         "taskType":data.Task_Type
                     });
 	}
@@ -255,7 +256,13 @@ function isRepeated(item)
 {
 	var value = false;
 	console.log('is repeated ' + item.val() );
-	var par =  item.parent()
+	
+	var par =  item.parent();
+	var parData = par.data('tasktype');
+	if(parData != 'GCases' || parData != 'Stack Overflow' )
+	{
+		return value;
+	}
 	par.siblings().each(function(){ 
 		console.log($(this).children().first().val());
 		if($(this).children('input').first().val() == item.val())
@@ -289,13 +296,7 @@ function setID(item, isIndex)
 			console.log("e.data " + e.data);	
 			taskInterface.toggleTimer(e.data);
 		});
-		var button = parent.children('button');
-		button.attr('disabled',false);
-		button.click(function(){
-			saveItem(parent.attr('id'));
-		});
-	
-
+		
 	}
 	else
 	{
@@ -307,6 +308,7 @@ function setID(item, isIndex)
 
 function saveItem(id)
 {
+	console.log('Save Item ' + id);
 	var data;
 	data = getItem(id);
 

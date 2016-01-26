@@ -60,9 +60,14 @@ var taskInterface = {
             task.Task_ID = taskInterface.nextID();
             var out = "";
             var taskType =  $('#task_type').val();
+            if(taskType == '')
+            {
+                return;
+            }
+            var GcasStack = true;
             out += '<p class="item' + (task.running == true ? ' running' : '') + '"  data-tasktype="'+ $('#task_type').val() +'"  id="item' + task.Task_ID + '" rel="' + task.Task_ID + '">';
             //out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
-            out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" placeholder="Task Id..." />';
+            out += '<input type="text" value="" name="' + task.Task_ID + '" id="task-id' + task.Task_ID + '" class="text" placeholder="Task Id..."></input>';
 
             //var start = new Date(task.Start_Time);
            // var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
@@ -87,7 +92,8 @@ var taskInterface = {
                         +'<option value="4.5">4.5</option>'
                     +'</select>'
 
-                    out+= '<button id="save_task" class="save_task" disabled="true">Save</button>' ;
+                   // out+= '<button id="save_task" class="save_task" disabled="true">Save</button>' ;
+                    GcasStack = false;
             }
             out += '</p>';
 
@@ -95,6 +101,20 @@ var taskInterface = {
             var formlist = $('#form-list');
             formlist.prepend(out);
             var child = $(formlist.children()[0]);
+
+            if(!GcasStack)
+            {
+                child.children('input').val(taskType).attr('disabled',true);
+                setID('task-id' + task.Task_ID, false);
+                saveItem(child.attr('id'));
+
+                child.children('#time_dropdown').change(child.attr('id'),function(e){
+                    saveItem(e.data);
+                });
+
+            }
+
+
             child.change('task-id' + task.Task_ID, function(e) {
                 setID(e.data, false);
             });
@@ -115,18 +135,21 @@ var taskInterface = {
         			console.log("show task list############" + data);
         			
         			var len = data.length, i;
-                    var GcasStack = true;
+                    var GcasStack ;
         			
         			if (len > 0) {
 
         				for (i = 0; i < len; i++) {
                             var out = "";
         					var task = data[i];
+                            GcasStack = (task.Task_Type == 'GCases' || task.Task_Type == 'Stack Overflow');
+
+                            var realID = GcasStack? task.Task_ID: task.Task_Type;
         			
         					out += '<p class="item' + (task.running == true ? ' running' : '') + '" data-tasktype="'+ task.Task_Type +'" id="' + task.Task_ID + '" rel="' + task.Task_ID + '">';
         					//out += '<label for="task-id" style="width:60px;line-height:20px;">' + "Task ID" + '</label>';
-        					out += '<input type="text" value="' + task.Task_ID + '" id="task-id'  + task.Task_ID +  '" class="text" disabled="true"/>';
-        			if( task.Task_Type == 'GCases' || task.Task_Type == 'Stack Overflow')
+        					out += '<input type="text" value="' + realID + '" id="task-id'  + realID +  '" class="text" disabled="true"/>';
+        			if( GcasStack)
             {
         					if (task.running == true) {
         						var start = new Date(task.Date_Submitted);
@@ -155,8 +178,8 @@ var taskInterface = {
                         +'<option value="4">4.0</option>'
                         +'<option value="4.5">4.5</option>'
                     +'</select>'
-                    out+= '<button id="save_task" class="save_task">Save</button>' ;
-                    GcasStack = false;
+                   // out+= '<button id="save_task" class="save_task">Save</button>' ;
+                    //GcasStack = false;
             }
             out += '</p>';
 
@@ -168,14 +191,21 @@ var taskInterface = {
                             var formlist = $('#form-list');
                             formlist.prepend(out);
                             var child = $(formlist.children()[0]);
-                            setID('task-id'+ task.Task_ID, true);
+                            
                             if(!GcasStack)
                             {
                                 child.children('select').val((taskInterface.sec(task.Total_Effort)/3600).toString());
+                                child.children('#time_dropdown').change(child.attr('id'),function(e){
+                                    saveItem(e.data);
+                                });
                             }
-                            child.change('task-id' + task.Task_ID, function(e) {
-                                setID(e.data, false);
-                            });
+                            else
+                            {
+                                setID('task-id'+ task.Task_ID, true);
+                                child.change('task-id' + task.Task_ID, function(e) {
+                                    setID(e.data, false);
+                                });
+                        }
         				}
         			} else {
         				//out = "<p class=\"notask\"><label>No tasks</label></p>"
