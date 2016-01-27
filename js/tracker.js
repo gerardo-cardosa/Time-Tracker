@@ -45,6 +45,7 @@ $(document).ready(function(){
 	});
 
 	$('#button-submit').click(function(){
+		$('#button-submit').attr('disabled', true);
 		buttonSubmit();
 	});
 });
@@ -81,7 +82,10 @@ function callSubmitEndpoint()
 	for(var i = 0; i < info.length; i++)
 	{
 		var data = info[i];
-		var tID = (data.Task_Type == 'GCases' || data.Task_Type == 'Stack Overflow')? data.Task_ID : data.Task_Type;
+		var tID = (data.Task_Type == 'GCases' || data.Task_Type == 'Stack_Overflow')? data.Task_ID : data.Task_Type;
+		if(data.End_Time == '0:00:00'){
+			continue;
+		}
 		logs.push({
                         "endTime": data.End_Time,
                         "startTime": data.Start_Time,
@@ -90,6 +94,15 @@ function callSubmitEndpoint()
                         "taskID": tID,
                         "taskType":data.Task_Type
                     });
+	}
+
+	if(logs.length ==0)
+	{
+		clearTasks();
+        localStorage.info = '';
+        localStorage.isSubmitted = true;
+        $('#button-submit').attr('disabled', false);
+        return;
 	}
 
 	var body = { 'logs':logs};
@@ -106,6 +119,7 @@ function callSubmitEndpoint()
                     			clearTasks();
                     			localStorage.info = '';
                     			localStorage.isSubmitted = true;
+                    			$('#button-submit').attr('disabled', false);
                     		}
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -259,7 +273,7 @@ function isRepeated(item)
 	
 	var par =  item.parent();
 	var parData = par.data('tasktype');
-	if(parData != 'GCases' || parData != 'Stack Overflow' )
+	if(parData != 'GCases' || parData != 'Stack_Overflow' )
 	{
 		return value;
 	}

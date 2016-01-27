@@ -72,7 +72,7 @@ var taskInterface = {
             //var start = new Date(task.Start_Time);
            // var dif = Number(task.Total_Effort) + Math.floor((new Date().getTime() - start.getTime()) / 1000)
             //out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
-            if(taskType == 'GCases' || taskType == 'Stack Overflow')
+            if(taskType == 'GCases' || taskType == 'Stack_Overflow')
             {
                 out += '<span class="timer">' + taskInterface.hms(0) + '</span>';
                 out += '<a href="#" class="power play ' + (task.running == true ? 'running' : '') + '" title="Timer on/off" rel="' + task.Task_ID + '"  ></a>';
@@ -81,6 +81,7 @@ var taskInterface = {
             else
             {
                 out+= '<select id="time_dropdown" class="time_dropdown">'
+                        +'<option value="0">0.0</option>'
                         +'<option value="0.5">0.5</option>'
                         +'<option value="1.0">1.0</option>'
                         +'<option value="1.5">1.5</option>'
@@ -89,7 +90,7 @@ var taskInterface = {
                         +'<option value="3.0">3.0</option>'
                         +'<option value="3.5">3.5</option>'
                         +'<option value="4.0">4.0</option>'
-                        +'<option value="4.5">4.5</option>'
+                        //+'<option value="4.5">4.5</option>'
                     +'</select>'
 
                    // out+= '<button id="save_task" class="save_task" disabled="true">Save</button>' ;
@@ -142,7 +143,7 @@ var taskInterface = {
         				for (i = 0; i < len; i++) {
                             var out = "";
         					var task = data[i];
-                            GcasStack = (task.Task_Type == 'GCases' || task.Task_Type == 'Stack Overflow');
+                            GcasStack = (task.Task_Type == 'GCases' || task.Task_Type == 'Stack_Overflow');
 
                             var realID = GcasStack? task.Task_ID: task.Task_Type;
         			
@@ -168,7 +169,8 @@ var taskInterface = {
             else
             {
                 out+= '<select id="time_dropdown" class="time_dropdown">'
-                        +'<option value=".5">0.5</option>'
+                        +'<option value="0">0.0</option>'
+                        +'<option value="0.5">0.5</option>'
                         +'<option value="1">1.0</option>'
                         +'<option value="1.5">1.5</option>'
                         +'<option value="2">2.0</option>'
@@ -176,7 +178,7 @@ var taskInterface = {
                         +'<option value="3">3.0</option>'
                         +'<option value="3.5">3.5</option>'
                         +'<option value="4">4.0</option>'
-                        +'<option value="4.5">4.5</option>'
+                        //+'<option value="4.5">4.5</option>'
                     +'</select>'
                    // out+= '<button id="save_task" class="save_task">Save</button>' ;
                     //GcasStack = false;
